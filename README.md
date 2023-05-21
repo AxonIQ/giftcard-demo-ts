@@ -69,7 +69,6 @@ Additionally, check the HTTP `scratch files` that you can run and explore the ap
  - [test.http](test.http)
  - [synapse.http](synapse.http)
 
-```bash
 
 ## Infrastructure
 Run Axon Server and Axon Synapse
@@ -88,9 +87,12 @@ Run Axon Server and Axon Synapse
  - [github](https://github.com/fraktalio/fmodel-ts)
  - [npm](https://www.npmjs.com/package/@fraktalio/fmodel-ts)
 
-## Stay in touch
 
-- Author - [Ivan Dugalic](https://twitter.com/idugalic)
+---
+
+Created with :heart: by [AxonIQ](http://axoniq.io)
+
+[axon]: https://axoniq.io/
 
 
 
