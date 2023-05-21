@@ -1,0 +1,86 @@
+### Register command hanlder for `default` context / Create or Update command handler
+
+PUT http://localhost:8080/v1/contexts/default/handlers/commands/7ec558ec-90c4-4d51-b444-a028830257bb
+Content-Type: application/json
+
+{
+  "names": [
+    "IssueGiftCardCommand", "RedeemGiftCardCommand", "CancelGiftCardCommand"
+  ],
+  "endpoint": "http://localhost:3000/commands",
+  "endpointType": "http-raw",
+  "clientId": "giftcard-demo-1",
+  "componentName": "Giftcard"
+}
+
+### Send commands (over Axon Synapse) to default context
+
+POST http://localhost:8080/v1/contexts/default/commands/IssueGiftCardCommand
+Content-Type: application/json
+AxonIQ-PayloadType: IssueGiftCardCommand
+AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ee
+
+{
+  "kind": "IssueGiftCardCommand",
+  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ee",
+  "amount": 550
+}
+
+###
+
+POST http://localhost:8080/v1/contexts/default/commands/RedeemGiftCardCommand
+Content-Type: application/json
+AxonIQ-PayloadType: RedeemGiftCardCommand
+AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ee
+
+{
+  "kind": "RedeemGiftCardCommand",
+  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ee",
+  "amount": 34
+}
+
+### Register Event Handler(s)
+
+# PUT does not work if the subscription does not exit, use POST instead :(
+# https://github.com/AxonIQ/axon-synapse/issues/109
+# PUT http://localhost:8080/v1/contexts/default/handlers/events/7ec558ec-90c4-4d51-b444-a028830257ba
+POST http://localhost:8080/v1/contexts/default/handlers/events
+Content-Type: application/json
+
+{
+  "names": [
+    "GiftCardIssuedEvent", "GiftCardRedeemedEvent", "GiftCardCanceledEvent"
+  ],
+  "endpoint": "http://localhost:3000/events",
+  "endpointType": "http-raw",
+  "clientId": "giftcard-demo-1",
+  "componentName": "Giftcard"
+}
+
+### Send events (over Axon Synapse) to default context
+
+POST http://localhost:8080/v1/contexts/default/events/GiftCardIssuedEvent
+AxonIQ-AggregateId: 10fca0c4-3376-4ca2-a7c2-db2b75c250e0
+AxonIQ-AggregateType: Giftcard
+AxonIQ-SequenceNumber: 0
+Content-Type: application/json
+
+{
+  "kind": "GiftCardIssuedEvent",
+  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250e0",
+  "amount": 550
+}
+
+###
+
+POST http://localhost:8080/v1/contexts/default/events/GiftCardRedeemedEvent
+AxonIQ-AggregateId: 10fca0c4-3376-4ca2-a7c2-db2b75c250e0
+AxonIQ-AggregateType: Giftcard
+AxonIQ-SequenceNumber: 1
+Content-Type: application/json
+
+{
+"kind": "GiftCardRedeemedEvent",
+"id": "10fca0c4-3376-4ca2-a7c2-db2b75c250e0",
+"amount": 52
+}
