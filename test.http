@@ -1,13 +1,13 @@
 POST http://localhost:3000/gift-card
 Content-Type: application/json
 
-{"kind" : "IssueGiftCardCommand", "id" : "10fca0c4-3376-4ca2-a7c2-db2b75c250ee", "amount" : "90001" }
+{"kind" : "IssueGiftCardCommand", "id" : "10fca0c4-3376-4ca2-a7c2-db2b75c250e3", "amount" : "90001" }
 
 ###
 PATCH http://localhost:3000/gift-card/redeem
 Content-Type: application/json
 
-{"kind" : "RedeemGiftCardCommand", "id" : "10fca0c4-3376-4ca2-a7c2-db2b75c250ee","amount" : "23" }
+{"kind" : "RedeemGiftCardCommand", "id" : "10fca0c4-3376-4ca2-a7c2-db2b75c250e3","amount" : "23" }
 
 ###
 GET http://localhost:3000/gift-card

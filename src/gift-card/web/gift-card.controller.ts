@@ -36,7 +36,7 @@ export class GiftCardController {
   @Post()
   async issue(
     @Body() request: IssueGiftCardCommand,
-  ): Promise<readonly GiftCardEvent[]> {
+  ): Promise<readonly [GiftCardEvent, number][]> {
     this.logger.log(
       `issuing gift card ${request.id} with amount ${request.amount}`,
     );
@@ -50,7 +50,7 @@ export class GiftCardController {
   @Patch('redeem')
   async redeem(
     @Body() request: RedeemGiftCardCommand,
-  ): Promise<readonly GiftCardEvent[]> {
+  ): Promise<readonly [GiftCardEvent, number][]> {
     this.logger.log(
       `redeeming gift card ${request.id} with amount ${request.amount}`,
     );
@@ -62,7 +62,9 @@ export class GiftCardController {
   }
 
   @Delete(':id')
-  async cancel(@Param('id') id: string): Promise<readonly GiftCardEvent[]> {
+  async cancel(
+    @Param('id') id: string,
+  ): Promise<readonly [GiftCardEvent, number][]> {
     const command: CancelGiftCardCommand = {
       kind: 'CancelGiftCardCommand',
       id: id,

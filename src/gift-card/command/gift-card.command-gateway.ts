@@ -24,7 +24,7 @@ export class GiftCardCommandGateway {
   async publishCommand(
     c: GiftCardCommand,
     context = 'default',
-  ): Promise<readonly GiftCardEvent[]> {
+  ): Promise<readonly [GiftCardEvent, number][]> {
     const headersRequest = {
       'Content-Type': 'application/json',
       'AxonIQ-PayloadType': c.kind,
@@ -40,7 +40,7 @@ export class GiftCardCommandGateway {
     );
     const { data } = await firstValueFrom(
       this.httpService
-        .post<GiftCardEvent[]>(URL, c, { headers: headersRequest })
+        .post<[GiftCardEvent, number][]>(URL, c, { headers: headersRequest })
         .pipe(
           catchError((error: AxiosError) => {
             this.logger.error(error.message, error.stack);

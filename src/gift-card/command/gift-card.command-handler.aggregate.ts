@@ -1,6 +1,6 @@
 import { GiftCardCommand } from '../api/gift-card.commands';
 import { GiftCardEvent } from '../api/gift-card.events';
-import { Decider, EventSourcingAggregate } from '@fraktalio/fmodel-ts';
+import { Decider, EventSourcingLockingAggregate } from '@fraktalio/fmodel-ts';
 import { Injectable } from '@nestjs/common';
 import { GiftCardEventRepository } from './gift-card.event-repository';
 import { GiftCard } from './gift-card.command-handler';
@@ -19,10 +19,11 @@ import { GiftCard } from './gift-card.command-handler';
  * @param e - event type that is being produced / a fact / an outcome of the decision - `GiftCardEvent`
  */
 @Injectable()
-export class GiftCardAggregate extends EventSourcingAggregate<
+export class GiftCardAggregate extends EventSourcingLockingAggregate<
   GiftCardCommand,
   GiftCard | null,
-  GiftCardEvent
+  GiftCardEvent,
+  number
 > {
   constructor(
     protected readonly commandHandler: Decider<
