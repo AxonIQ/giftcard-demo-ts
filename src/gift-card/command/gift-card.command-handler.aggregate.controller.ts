@@ -58,7 +58,7 @@ export class GiftCardCommandHandlerController implements OnModuleInit {
    * @param headers
    */
   @Post()
-  handle(
+  async handle(
     @Body() request: GiftCardCommand,
     @Headers() headers: Record<string, string>,
   ) {
@@ -69,6 +69,6 @@ export class GiftCardCommandHandlerController implements OnModuleInit {
         headers,
       )}`,
     );
-    return this.giftCardAggregate.handle(request);
+    return await this.giftCardAggregate.handle(request);
   }
 }

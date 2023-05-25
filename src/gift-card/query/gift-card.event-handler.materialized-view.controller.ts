@@ -63,7 +63,7 @@ export class GiftCardEventHandlerController implements OnModuleInit {
    * @param headers
    */
   @Post()
-  handle(
+  async handle(
     @Body() request: GiftCardEvent,
     @Headers() headers: Record<string, string>,
   ) {
@@ -72,6 +72,6 @@ export class GiftCardEventHandlerController implements OnModuleInit {
         request,
       )} and headers ${JSON.stringify(headers)}`,
     );
-    return this.giftCardAMaterializedView.handle(request);
+    return await this.giftCardAMaterializedView.handle(request);
   }
 }

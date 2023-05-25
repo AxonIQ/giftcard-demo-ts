@@ -24,15 +24,14 @@ export class GiftCardCommandGateway {
     contextProvider: (c: GiftCardCommand) => string = () =>
       this.configService.get<string>('AXON_CONTEXT', 'default'),
   ): Promise<readonly [GiftCardEvent, number][]> {
-    const result = this.axonClient.publishCommand(
+    this.logger.log(
+      `dispatching command ${c.kind} with body ${JSON.stringify(c)}`,
+    );
+    return await this.axonClient.publishCommand(
       c,
       (c) => c.kind,
       (c) => c.id,
       contextProvider,
     );
-    this.logger.log(
-      `dispatched command ${c.kind} with body ${JSON.stringify(c)}`,
-    );
-    return result;
   }
 }

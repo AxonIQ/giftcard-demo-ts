@@ -20,7 +20,7 @@ export class GiftCardViewStateRepository
   implements ViewStateRepository<GiftCardEvent, GiftCardSummary | null>
 {
   async fetchState(e: GiftCardEvent): Promise<GiftCardSummary | null> {
-    return this.findById(e.id);
+    return await this.findById(e.id);
   }
 
   async save(s: GiftCardSummary | null): Promise<GiftCardSummary | null> {

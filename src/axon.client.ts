@@ -119,6 +119,11 @@ export class AxonClient<C, E> {
       c,
     )}/commands/${payloadTypeProvider(c)}`;
 
+    this.logger.debug(
+      `dispatching command ${payloadTypeProvider(c)} with body ${JSON.stringify(
+        c,
+      )}`,
+    );
     const { data } = await firstValueFrom(
       this.httpService
         .post<[E, number][]>(URL, c, { headers: headersRequest })
@@ -128,6 +133,11 @@ export class AxonClient<C, E> {
             throw error;
           }),
         ),
+    );
+    this.logger.debug(
+      `dispatched command ${payloadTypeProvider(c)} with body ${JSON.stringify(
+        c,
+      )}`,
     );
     return data;
   }
