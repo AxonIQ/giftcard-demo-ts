@@ -1,10 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { HttpService } from '@nestjs/axios';
 import { GiftCardCommand } from '../api/gift-card.commands';
-import { catchError, firstValueFrom } from 'rxjs';
-import { AxiosError } from 'axios';
-import { ConfigService } from '@nestjs/config';
 import { GiftCardEvent } from '../api/gift-card.events';
+import { AxonClient } from '../../axon.client';
+import { ConfigService } from '@nestjs/config';
 
 /**
  * *** ADAPTER LAYER ***
@@ -17,37 +15,24 @@ import { GiftCardEvent } from '../api/gift-card.events';
 export class GiftCardCommandGateway {
   private readonly logger = new Logger(GiftCardCommandGateway.name);
   constructor(
-    private readonly httpService: HttpService,
+    private readonly axonClient: AxonClient<GiftCardCommand, GiftCardEvent>,
     private readonly configService: ConfigService,
   ) {}
 
   async publishCommand(
     c: GiftCardCommand,
-    context = 'default',
+    contextProvider: (c: GiftCardCommand) => string = () =>
+      this.configService.get<string>('AXON_CONTEXT', 'default'),
   ): Promise<readonly [GiftCardEvent, number][]> {
-    const headersRequest = {
-      'Content-Type': 'application/json',
-      'AxonIQ-PayloadType': c.kind,
-      'AxonIQ-RoutingKey': c.id,
-    };
-    const axonApiUrl = this.configService.get<string>(
-      'AXON_API_URL',
-      'http://localhost:8080/v1',
+    const result = this.axonClient.publishCommand(
+      c,
+      (c) => c.kind,
+      (c) => c.id,
+      contextProvider,
     );
-    const URL = `${axonApiUrl}/contexts/${context}/commands/${c.kind}`;
     this.logger.log(
-      `dispatching command ${c.kind} with body ${JSON.stringify(c)}`,
+      `dispatched command ${c.kind} with body ${JSON.stringify(c)}`,
     );
-    const { data } = await firstValueFrom(
-      this.httpService
-        .post<[GiftCardEvent, number][]>(URL, c, { headers: headersRequest })
-        .pipe(
-          catchError((error: AxiosError) => {
-            this.logger.error(error.message, error.stack);
-            throw error;
-          }),
-        ),
-    );
-    return data;
+    return result;
   }
 }

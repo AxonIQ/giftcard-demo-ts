@@ -18,6 +18,7 @@ import { HttpModule } from '@nestjs/axios';
 import { GiftCardViewStateRepository } from '../query/gift-card.view-state-repository';
 import { GiftCardCommandGateway } from '../command/gift-card.command-gateway';
 import { ConfigModule } from '@nestjs/config';
+import { AxonClient } from '../../axon.client';
 
 describe('GiftCardController', () => {
   let controller: GiftCardController;
@@ -32,6 +33,7 @@ describe('GiftCardController', () => {
       ],
       controllers: [GiftCardController],
       providers: [
+        AxonClient,
         GiftCardAggregate,
         {
           provide: Decider<GiftCardCommand, GiftCard | null, GiftCardEvent>,

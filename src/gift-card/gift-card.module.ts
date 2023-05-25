@@ -19,6 +19,7 @@ import { GiftCardAggregate } from './command/gift-card.command-handler.aggregate
 import { GiftCardEventRepository } from './command/gift-card.event-repository';
 import { GiftCardViewStateRepository } from './query/gift-card.view-state-repository';
 import { GiftCardCommandGateway } from './command/gift-card.command-gateway';
+import { AxonClient } from '../axon.client';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { GiftCardCommandGateway } from './command/gift-card.command-gateway';
     GiftCardEventHandlerController,
   ],
   providers: [
+    AxonClient,
     GiftCardAggregate,
     {
       provide: Decider<GiftCardCommand, GiftCard | null, GiftCardEvent>,
