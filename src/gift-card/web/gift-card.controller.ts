@@ -78,12 +78,12 @@ export class GiftCardController {
   }
 
   @Get()
-  find(): Promise<readonly GiftCardSummary[] | null> {
-    return this.giftCardViewStateRepository.findAll();
+  async find(): Promise<readonly GiftCardSummary[] | null> {
+    return await this.giftCardViewStateRepository.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<GiftCardSummary | null> {
-    return this.giftCardViewStateRepository.findById(id);
+  async findOne(@Param('id') id: string): Promise<GiftCardSummary | null> {
+    return await this.giftCardViewStateRepository.findById(id);
   }
 }

@@ -38,7 +38,7 @@ export class GiftCardEventHandlerController implements OnModuleInit {
     this.logger.log(
       'POST http://localhost:8080/v1/contexts/default/handlers/events\\r\\nContent-Type: application/json\\r\\n\\r\\n{\\r\\n  \\"names\\": [\\r\\n    \\"GiftCardIssuedEvent\\", \\"GiftCardRedeemedEvent\\", \\"GiftCardCanceledEvent\\"\\r\\n  ],\\r\\n  \\"endpoint\\": \\"http://localhost:3000/events\\",\\r\\n  \\"endpointType\\": \\"http-raw\\",\\r\\n  \\"clientId\\": \\"giftcard-demo-1\\",\\r\\n  \\"componentName\\": \\"Giftcard\\"\\r\\n}',
     );
-    // return this.axonClient
+    // return await this.axonClient
     //   .registerEventHandler(
     //     '9954567e-1742-4446-b649-8f949ebf5520',
     //     [

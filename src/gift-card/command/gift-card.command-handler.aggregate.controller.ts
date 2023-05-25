@@ -31,7 +31,7 @@ export class GiftCardCommandHandlerController implements OnModuleInit {
    * Register the command handler for the `default` context - on module initialization
    */
   async onModuleInit(): Promise<void> {
-    return this.axonClient
+    return await this.axonClient
       .registerCommandHandler(
         '7ec558ec-90c4-4d51-b444-a028830257bb',
         [
