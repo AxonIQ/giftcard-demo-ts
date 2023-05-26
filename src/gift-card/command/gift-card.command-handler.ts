@@ -9,7 +9,11 @@ import { Logger } from '@nestjs/common';
  * Gift card state / a data class that holds the current state of the gift card
  */
 export class GiftCard {
-  constructor(readonly id: string, readonly remainingAmount: number) {}
+  constructor(
+    readonly id: string,
+    readonly remainingAmount: number,
+    readonly isActive: boolean = true,
+  ) {}
 }
 const logger = new Logger('GiftCardCommandHandler');
 /**
@@ -44,7 +48,7 @@ export const giftCardCommandHandler: IDecider<
         ];
       case 'RedeemGiftCardCommand':
         logger.log(`redeemed gift card ${c.id} successfully`);
-        return s !== null
+        return s !== null && s.remainingAmount >= c.amount && s.isActive
           ? [
               {
                 kind: 'GiftCardRedeemedEvent',
@@ -70,7 +74,6 @@ export const giftCardCommandHandler: IDecider<
         return [];
     }
   },
-  // Exhaustive matching of the event type
   (s, e) => {
     switch (e.kind) {
       case 'GiftCardIssuedEvent':
@@ -80,8 +83,9 @@ export const giftCardCommandHandler: IDecider<
           ? new GiftCard(s.id, s.remainingAmount - e.amount)
           : s;
       case 'GiftCardCancelledEvent':
-        return s !== null ? new GiftCard(s.id, 0) : s;
+        return s !== null ? new GiftCard(s.id, 0, false) : s;
       default:
+        // Exhaustive matching of the event type
         const _: never = e;
         console.log('Never just happened in event sourcing handler: ' + _);
         return s;

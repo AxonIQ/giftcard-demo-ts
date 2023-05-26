@@ -15,11 +15,36 @@ import {
 } from '../command/gift-card.command-handler';
 import { GiftCardEventRepository } from '../command/gift-card.event-repository';
 import { HttpModule } from '@nestjs/axios';
-import { GiftCardViewStateRepository } from '../query/gift-card.view-state-repository';
+import {
+  GiftCardSummaryEntity,
+  GiftCardViewStateRepository,
+} from '../query/gift-card.view-state-repository';
 import { GiftCardCommandGateway } from '../command/gift-card.command-gateway';
 import { ConfigModule } from '@nestjs/config';
 import { AxonClient } from '../../axon.client';
+import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
 
+const giftCardArray = [
+  {
+    id: '1',
+    initialAmount: 1000,
+    remainingAmount: 800,
+    isActive: true,
+  },
+  {
+    id: '2',
+    initialAmount: 1200,
+    remainingAmount: 500,
+    isActive: true,
+  },
+];
+
+const oneGiftCard = {
+  id: '1',
+  initialAmount: 1000,
+  remainingAmount: 800,
+  isActive: true,
+};
 describe('GiftCardController', () => {
   let controller: GiftCardController;
 
@@ -30,6 +55,17 @@ describe('GiftCardController', () => {
         ConfigModule.forRoot({
           isGlobal: true,
         }),
+        // TypeOrmModule.forRoot({
+        //   type: 'postgres',
+        //   host: 'localhost',
+        //   port: 5432,
+        //   username: 'postgres', // TODO: change to env
+        //   password: 'postgres', // TODO: change to env
+        //   database: 'axon', // TODO: change to env
+        //   entities: [],
+        //   synchronize: true, // TODO: change to false in production
+        // }),
+        // TypeOrmModule.forFeature([GiftCardSummaryEntity]),
       ],
       controllers: [GiftCardController],
       providers: [
@@ -47,6 +83,16 @@ describe('GiftCardController', () => {
           useValue: giftCardEventHandler,
         },
         GiftCardViewStateRepository,
+        {
+          provide: getRepositoryToken(GiftCardSummaryEntity),
+          useValue: {
+            find: jest.fn().mockResolvedValue(giftCardArray),
+            findOneBy: jest.fn().mockResolvedValue(oneGiftCard),
+            save: jest.fn().mockResolvedValue(oneGiftCard),
+            remove: jest.fn(),
+            delete: jest.fn(),
+          },
+        },
       ],
     }).compile();
 

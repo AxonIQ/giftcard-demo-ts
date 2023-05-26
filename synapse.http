@@ -49,7 +49,7 @@ Content-Type: application/json
 
 {
   "names": [
-    "GiftCardIssuedEvent", "GiftCardRedeemedEvent", "GiftCardCanceledEvent"
+    "GiftCardIssuedEvent", "GiftCardRedeemedEvent", "GiftCardCancelledEvent"
   ],
   "endpoint": "http://localhost:3000/events",
   "endpointType": "http-raw",

@@ -2,46 +2,54 @@ import { GiftCardSummary } from './gift-card.event-handler';
 import { Injectable } from '@nestjs/common';
 import { ViewStateRepository } from '@fraktalio/fmodel-ts';
 import { GiftCardEvent } from '../api/gift-card.events';
+import { Column, Entity, PrimaryGeneratedColumn, Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 /**
  * *** ADAPTER LAYER ***
  * ___
- * Very simple storage
+ * Database entity
  */
-let giftCardStorage: GiftCardSummary[] = [];
-
+@Entity()
+export class GiftCardSummaryEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+  @Column()
+  initialAmount: number;
+  @Column()
+  remainingAmount: number;
+  @Column({ default: true })
+  isActive: boolean;
+}
 /**
  * *** ADAPTER LAYER ***
  * ___
- * In-memory view store implementation - default, simple and not very efficient
+ * Database `view store` implementation
  */
 @Injectable()
 export class GiftCardViewStateRepository
   implements ViewStateRepository<GiftCardEvent, GiftCardSummary | null>
 {
+  constructor(
+    @InjectRepository(GiftCardSummaryEntity)
+    private readonly giftCardRepository: Repository<GiftCardSummaryEntity>,
+  ) {}
   async fetchState(e: GiftCardEvent): Promise<GiftCardSummary | null> {
-    return await this.findById(e.id);
+    return await this.giftCardRepository.findOneBy({ id: e.id });
   }
 
   async save(s: GiftCardSummary | null): Promise<GiftCardSummary | null> {
     if (s !== null) {
-      const giftCardSummary = giftCardStorage
-        .filter((it) => s.id === it.id)
-        .map(
-          (it) =>
-            new GiftCardSummary(it.id, s.initialAmount, s.remainingAmount),
-        )[0];
-      if (giftCardSummary === undefined) {
-        giftCardStorage = giftCardStorage.concat(s);
-      }
+      return await this.giftCardRepository.save(s);
     }
     return s;
   }
 
-  readonly findById: (id: string) => Promise<GiftCardSummary | null> = async (
-    id: string,
-  ) => giftCardStorage.find((giftCard) => giftCard.id === id) ?? null;
+  async findAll(): Promise<GiftCardSummary[]> {
+    return await this.giftCardRepository.find();
+  }
 
-  readonly findAll: () => Promise<GiftCardSummary[]> = async () =>
-    giftCardStorage;
+  async findById(id: string): Promise<GiftCardSummary | null> {
+    return await this.giftCardRepository.findOneBy({ id: id });
+  }
 }

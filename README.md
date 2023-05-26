@@ -71,7 +71,7 @@ Additionally, check the HTTP `scratch files` that you can run and explore the ap
 
 
 ## Infrastructure
-Run Axon Server and Axon Synapse
+Run Axon Server, Axon Synapse and Postgres
 
 ### Axon Server
  - [Overview](https://developer.axoniq.io/axon-server-enterprise/overview)
@@ -82,6 +82,12 @@ Run Axon Server and Axon Synapse
  - [Installation instructions](https://library.axoniq.io/synapse-quick-start/development/installation.html)
  - [Download](https://download.axoniq.io/axonserver/axon-synapse.zip)
  - [http://localhost:8080/](http://localhost:8080/)
+
+### Postgres
+ - [Download](https://www.postgresql.org/download/)
+ - [http://localhost:5432/](http://localhost:5432/)
+ - docker
+   - `docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
 
 ### Fmodel-ts
  - [github](https://github.com/fraktalio/fmodel-ts)

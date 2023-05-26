@@ -12,6 +12,7 @@ export class GiftCardSummary {
     readonly id: string,
     readonly initialAmount: number,
     readonly remainingAmount: number,
+    readonly isActive: boolean = true,
   ) {}
 }
 const logger = new Logger('GiftCardEventHandler');
@@ -46,7 +47,9 @@ export const giftCardEventHandler: IView<
         : s;
     case 'GiftCardCancelledEvent':
       logger.log(`GiftCardCancelledEvent event ${e.id} handled successfully`);
-      return s !== null ? new GiftCardSummary(s.id, s.initialAmount, 0) : s;
+      return s !== null
+        ? new GiftCardSummary(s.id, s.initialAmount, 0, false)
+        : s;
     default:
       // Exhaustive matching of the event type
       const _: never = e;

@@ -44,7 +44,7 @@ export class GiftCardEventHandlerController implements OnModuleInit {
     //     [
     //       'GiftCardIssuedEvent',
     //       'GiftCardRedeemedEvent',
-    //       'GiftCardCanceledEvent',
+    //       'GiftCardCancelledEvent',
     //     ],
     //     'giftcard-demo-1',
     //     'Giftcard',
