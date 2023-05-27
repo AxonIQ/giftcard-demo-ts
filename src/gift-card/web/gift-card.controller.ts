@@ -17,8 +17,8 @@ import {
 } from '../api/gift-card.commands';
 import { GiftCardEvent } from '../api/gift-card.events';
 import { GiftCardSummary } from '../query/gift-card.event-handler';
-import { GiftCardViewStateRepository } from '../query/gift-card.view-state-repository';
 import { GiftCardCommandGateway } from '../command/gift-card.command-gateway';
+import { GiftCardQueryGateway } from '../query/gift-card.query-gateway';
 
 /**
  * *** ADAPTER LAYER ***
@@ -29,8 +29,8 @@ import { GiftCardCommandGateway } from '../command/gift-card.command-gateway';
 export class GiftCardController {
   private readonly logger = new Logger(GiftCardController.name);
   constructor(
-    private readonly giftCardViewStateRepository: GiftCardViewStateRepository,
     private readonly giftCardCommandGateway: GiftCardCommandGateway,
+    private readonly giftCardQueryGateway: GiftCardQueryGateway,
   ) {}
 
   @Post()
@@ -78,12 +78,20 @@ export class GiftCardController {
   }
 
   @Get()
-  async find(): Promise<readonly GiftCardSummary[] | null> {
-    return await this.giftCardViewStateRepository.findAll();
+  async find(): Promise<readonly GiftCardSummary[] | GiftCardSummary | null> {
+    return await this.giftCardQueryGateway.publishQuery(
+      { kind: 'FindAllQuery' },
+      'single',
+    );
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<GiftCardSummary | null> {
-    return await this.giftCardViewStateRepository.findById(id);
+  async findOne(
+    @Param('id') id: string,
+  ): Promise<readonly GiftCardSummary[] | GiftCardSummary | null> {
+    return await this.giftCardQueryGateway.publishQuery(
+      { kind: 'FindByIdQuery', id: id },
+      'single',
+    );
   }
 }

@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
  * A generalized Axon Client
  */
 @Injectable()
-export class AxonClient<C, E> {
+export class AxonClient<C, E, Q> {
   private readonly logger = new Logger(AxonClient.name);
   constructor(
     private readonly httpService: HttpService,
@@ -143,6 +143,59 @@ export class AxonClient<C, E> {
   }
 
   /**
+   * Publish a query to Axon Server
+   * @param q - query
+   * @param payloadTypeProvider - payload type provider / a function that returns command payload type from the query
+   * @param responseTypeProvider - response type provider / a function that returns response type from the query
+   * @param responseCardinalityProvider - response cardinality provider / a function that returns response cardinality from the query
+   * @param contextProvider - context provider / a function that returns context name from the query
+   */
+  async publishQuery<QR>(
+    q: Q,
+    payloadTypeProvider: (q: Q) => string,
+    responseTypeProvider: (q: Q) => string,
+    responseCardinalityProvider: (q: Q) => string,
+    contextProvider: (q: Q) => string = () =>
+      this.configService.get<string>('AXON_CONTEXT', 'default'),
+  ): Promise<readonly QR[] | QR | null> {
+    const headersRequest = {
+      'Content-Type': 'application/json',
+      'AxonIQ-PayloadType': payloadTypeProvider(q),
+      'AxonIQ-ResponseType': responseTypeProvider(q),
+      'AxonIQ-ResponseCardinality': responseCardinalityProvider(q),
+    };
+    const axonApiUrl = this.configService.get<string>(
+      'AXON_API_URL',
+      'http://localhost:8080/v1',
+    );
+    const URL = `${axonApiUrl}/contexts/${contextProvider(
+      q,
+    )}/queries/${payloadTypeProvider(q)}`;
+
+    this.logger.debug(
+      `dispatching query ${payloadTypeProvider(q)} with body ${JSON.stringify(
+        q,
+      )}`,
+    );
+    const { data } = await firstValueFrom(
+      this.httpService
+        .post<QR[] | QR | null>(URL, q, { headers: headersRequest })
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(error.message, error.stack);
+            throw error;
+          }),
+        ),
+    );
+    this.logger.debug(
+      `dispatched query ${payloadTypeProvider(q)} with body ${JSON.stringify(
+        q,
+      )}`,
+    );
+    return data;
+  }
+
+  /**
    * Register an event handler
    * @param handlerId - unique handler id for the event handler registration
    * @param events - list of event names/types to register the handler for
@@ -245,6 +298,58 @@ export class AxonClient<C, E> {
     );
     return data;
   }
+
+  /**
+   * Register a query handler
+   * @param handlerId - unique handler id for the command handler registration
+   * @param queries - list of query names/types to register the handler for
+   * @param clientId - client id
+   * @param componentName - component name
+   * @param route - a relative route to the query handler
+   * @param context - context name
+   */
+  async registerQueryHandler(
+    handlerId: string,
+    queries: string[],
+    clientId: string,
+    componentName: string,
+    route: string,
+    context = this.configService.get<string>('AXON_CONTEXT', 'default'),
+  ): Promise<HandlerRegistrationResponse> {
+    const headersRequest = {
+      'Content-Type': 'application/json',
+    };
+    const axonApiUrl = this.configService.get<string>(
+      'AXON_API_URL',
+      'http://localhost:8080/v1',
+    );
+    const callbackEndpoint =
+      this.configService.get<string>(
+        'AXON_QUERY_CALLBACK_ENDPOINT',
+        'http://localhost:3000',
+      ) + route;
+    const request = {
+      names: queries,
+      endpoint: callbackEndpoint,
+      endpointType: 'http-raw',
+      clientId: clientId,
+      componentName: componentName,
+    };
+    const URL = `${axonApiUrl}/contexts/${context}/handlers/queries/${handlerId}`;
+    const { data } = await firstValueFrom(
+      this.httpService
+        .put<HandlerRegistrationResponse>(URL, request, {
+          headers: headersRequest,
+        })
+        .pipe(
+          catchError((error: AxiosError) => {
+            this.logger.error(error.message, error.stack);
+            throw error;
+          }),
+        ),
+    );
+    return data;
+  }
 }
 
 interface Data {
@@ -287,3 +392,13 @@ export interface EndpointOption {
   key: string;
   value: string;
 }
+
+export const AXONIQ_COMMANDNAME = 'axoniq-commandname';
+export const AXONIQ_QUERYNAME = 'axoniq-queryname';
+export const AXONIQ_PAYLOADTYPE = 'axoniq-payloadtype';
+export const AXONIQ_ROUTINGKEY = 'axoniq-routingkey';
+export const AXONIQ_MESSAGEID = 'axoniq-messageid';
+export const AXONIQ_EVENTNAME = 'axoniq-eventname';
+export const AXONIQ_AGGREGATEID = 'axoniq-aggregateid';
+export const AXONIQ_AGGREGATETYPE = 'axoniq-aggregatetype';
+export const AXONIQ_SEQUENCENUMBER = 'axoniq-sequencenumber';

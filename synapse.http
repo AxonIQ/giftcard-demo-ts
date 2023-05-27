@@ -1,4 +1,4 @@
-### Register command hanlder for `default` context / Create or Update command handler
+### Register command hanlder for `default` context / Create or Update command handler registration
 
 PUT http://localhost:8080/v1/contexts/default/handlers/commands/7ec558ec-90c4-4d51-b444-a028830257bb
 Content-Type: application/json
@@ -18,11 +18,11 @@ Content-Type: application/json
 POST http://localhost:8080/v1/contexts/default/commands/IssueGiftCardCommand
 Content-Type: application/json
 AxonIQ-PayloadType: IssueGiftCardCommand
-AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ee
+AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ff
 
 {
   "kind": "IssueGiftCardCommand",
-  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ee",
+  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ff",
   "amount": 550
 }
 
@@ -31,11 +31,11 @@ AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ee
 POST http://localhost:8080/v1/contexts/default/commands/RedeemGiftCardCommand
 Content-Type: application/json
 AxonIQ-PayloadType: RedeemGiftCardCommand
-AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ee
+AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ff
 
 {
   "kind": "RedeemGiftCardCommand",
-  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ee",
+  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ff",
   "amount": 34
 }
 
@@ -83,4 +83,43 @@ Content-Type: application/json
 "kind": "GiftCardRedeemedEvent",
 "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250e0",
 "amount": 52
+}
+
+### Register query hanlder for `default` context / Create or Update query handler registration
+
+PUT http://localhost:8080/v1/contexts/default/handlers/queries/9ec558ec-90c4-4d51-b444-a028830257aa
+Content-Type: application/json
+
+{
+  "names": [
+    "FindByIdQuery", "FindAllQuery"
+  ],
+  "endpoint": "http://localhost:3000/queries",
+  "endpointType": "http-raw",
+  "clientId": "giftcard-demo-1",
+  "componentName": "Giftcard"
+}
+
+### Send queries (over Axon Synapse) to default context
+
+POST http://localhost:8080/v1/contexts/default/queries/FindByIdQuery
+Content-Type: application/json
+AxonIQ-PayloadType: FindByIdQuery
+AxonIQ-ResponseCardinality: single
+AxonIQ-ResponseType: GiftCardSummary
+
+{
+  "kind": "FindByIdQuery",
+  "id": "10fca0c4-3376-4ca2-a7c2-db2b75c250ff"
+}
+
+###
+POST http://localhost:8080/v1/contexts/default/queries/FindAllQuery
+Content-Type: application/json
+AxonIQ-PayloadType: FindAllQuery
+AxonIQ-ResponseCardinality: multiple
+AxonIQ-ResponseType: GiftCardSummary
+
+{
+  "kind": "FindAllQuery"
 }

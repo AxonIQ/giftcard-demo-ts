@@ -8,9 +8,10 @@ import {
 } from '@nestjs/common';
 import { GiftCardCommand } from '../api/gift-card.commands';
 import { GiftCardAggregate } from './gift-card.command-handler.aggregate';
-import { AXONIQ_COMMANDNAME } from '../../app.module';
+import { AXONIQ_COMMANDNAME } from '../../axon.client';
 import { AxonClient } from '../../axon.client';
 import { GiftCardEvent } from '../api/gift-card.events';
+import { GiftCardQuery } from '../api/gift-card.queries';
 
 /**
  * *** ADAPTER LAYER ***
@@ -24,7 +25,11 @@ export class GiftCardCommandHandlerController implements OnModuleInit {
   private readonly logger = new Logger(GiftCardCommandHandlerController.name);
   constructor(
     private readonly giftCardAggregate: GiftCardAggregate,
-    private readonly axonClient: AxonClient<GiftCardCommand, GiftCardEvent>,
+    private readonly axonClient: AxonClient<
+      GiftCardCommand,
+      GiftCardEvent,
+      GiftCardQuery
+    >,
   ) {}
 
   /**

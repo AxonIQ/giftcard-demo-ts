@@ -24,6 +24,7 @@ import {
 import { GiftCardCommandGateway } from './command/gift-card.command-gateway';
 import { AxonClient } from '../axon.client';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { GiftCardQueryGateway } from './query/gift-card.query-gateway';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       useValue: giftCardEventHandler,
     },
     GiftCardViewStateRepository,
+    GiftCardQueryGateway,
   ],
 })
 export class GiftCardModule {}

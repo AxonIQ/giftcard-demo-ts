@@ -22,7 +22,8 @@ import {
 import { GiftCardCommandGateway } from '../command/gift-card.command-gateway';
 import { ConfigModule } from '@nestjs/config';
 import { AxonClient } from '../../axon.client';
-import { getRepositoryToken, TypeOrmModule } from '@nestjs/typeorm';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { GiftCardQueryGateway } from '../query/gift-card.query-gateway';
 
 const giftCardArray = [
   {
@@ -93,6 +94,7 @@ describe('GiftCardController', () => {
             delete: jest.fn(),
           },
         },
+        GiftCardQueryGateway,
       ],
     }).compile();
 

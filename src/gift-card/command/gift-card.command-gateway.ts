@@ -3,6 +3,7 @@ import { GiftCardCommand } from '../api/gift-card.commands';
 import { GiftCardEvent } from '../api/gift-card.events';
 import { AxonClient } from '../../axon.client';
 import { ConfigService } from '@nestjs/config';
+import { GiftCardQuery } from '../api/gift-card.queries';
 
 /**
  * *** ADAPTER LAYER ***
@@ -15,7 +16,11 @@ import { ConfigService } from '@nestjs/config';
 export class GiftCardCommandGateway {
   private readonly logger = new Logger(GiftCardCommandGateway.name);
   constructor(
-    private readonly axonClient: AxonClient<GiftCardCommand, GiftCardEvent>,
+    private readonly axonClient: AxonClient<
+      GiftCardCommand,
+      GiftCardEvent,
+      GiftCardQuery
+    >,
     private readonly configService: ConfigService,
   ) {}
 

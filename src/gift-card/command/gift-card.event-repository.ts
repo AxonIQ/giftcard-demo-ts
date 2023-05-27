@@ -8,6 +8,7 @@ import { GiftCardCommand } from '../api/gift-card.commands';
 import { HttpService } from '@nestjs/axios';
 import { ConfigService } from '@nestjs/config';
 import { AxonClient } from '../../axon.client';
+import { GiftCardQuery } from '../api/gift-card.queries';
 
 /**
  * *** ADAPTER LAYER ***
@@ -22,7 +23,11 @@ export class GiftCardEventRepository
   constructor(
     private readonly httpService: HttpService,
     private readonly configService: ConfigService,
-    private readonly axonClient: AxonClient<GiftCardCommand, GiftCardEvent>,
+    private readonly axonClient: AxonClient<
+      GiftCardCommand,
+      GiftCardEvent,
+      GiftCardQuery
+    >,
   ) {}
   async fetchEvents(c: GiftCardCommand): Promise<[GiftCardEvent, number][]> {
     const result = await this.axonClient.fetchAggregateEvents(c, (c) => c.id);
