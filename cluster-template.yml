@@ -1,0 +1,37 @@
+axoniq:
+  axonserver:
+    cluster-template:
+      first: axonserver-enterprise-1:8224
+      replicationGroups:
+        - name: _admin
+          roles:
+            - node: axonserver-enterprise-1
+              role: PRIMARY
+            - node: axonserver-enterprise-2
+              role: PRIMARY
+            - node: axonserver-enterprise-3
+              role: PRIMARY
+          contexts:
+            - name: _admin
+        - name: default
+          roles:
+            - node: axonserver-enterprise-1
+              role: PRIMARY
+            - node: axonserver-enterprise-2
+              role: PRIMARY
+            - node: axonserver-enterprise-3
+              role: PRIMARY
+          contexts:
+            - name: default
+        - name: synapse
+          roles:
+            - node: axonserver-enterprise-1
+              role: PRIMARY
+            - node: axonserver-enterprise-2
+              role: PRIMARY
+            - node: axonserver-enterprise-3
+              role: PRIMARY
+          contexts:
+            - name: synapse
+      applications: []
+      users: []

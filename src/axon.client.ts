@@ -28,10 +28,14 @@ export class AxonClient<C, E, Q> {
     aggregateIdProvider: (c: C) => string,
     context = this.configService.get<string>('AXON_CONTEXT', 'default'),
   ): Promise<[E, number][]> {
+    const axonApiUrl = this.configService.get<string>(
+      'AXON_API_URL',
+      'http://localhost:8080/v1',
+    );
     const { data } = await firstValueFrom(
       this.httpService
         .get<Data>(
-          `http://localhost:8080/v1/contexts/${context}/aggregate/${aggregateIdProvider(
+          `${axonApiUrl}/contexts/${context}/aggregate/${aggregateIdProvider(
             c,
           )}/events`,
         )
