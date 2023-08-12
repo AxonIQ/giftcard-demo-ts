@@ -35,12 +35,12 @@ export class GiftCardEventHandlerController implements OnModuleInit {
   ) {}
 
   /**
-   * Register the gift card event handler and query handler for the `default` context - on module initialization
+   * Register the gift card event handler and query handler for the `default` context - on module initialization - the operation is idempotent
    */
   async onModuleInit(): Promise<void> {
     await this.axonClient
       .registerQueryHandler(
-        '9ec558ec-90c4-4d51-b444-a028830257aa',
+        '08a08dc4-0057-45e8-9291-9a47ffb09e52',
         ['FindByIdQuery', 'FindAllQuery'],
         'giftcard-demo-1',
         'Giftcard',
@@ -51,31 +51,24 @@ export class GiftCardEventHandlerController implements OnModuleInit {
           `registered query handlers with response ${JSON.stringify(response)}`,
         );
       });
-    this.logger.log(
-      '### registering event handlers via PUT is not possible at the moment due to a known bug in Axon Synapse ###',
-    );
-    this.logger.log('### Do it manually ###');
-    this.logger.log(
-      'POST http://localhost:8080/v1/contexts/default/handlers/events\\r\\nContent-Type: application/json\\r\\n\\r\\n{\\r\\n  \\"names\\": [\\r\\n    \\"GiftCardIssuedEvent\\", \\"GiftCardRedeemedEvent\\", \\"GiftCardCanceledEvent\\"\\r\\n  ],\\r\\n  \\"endpoint\\": \\"http://localhost:3000/events\\",\\r\\n  \\"endpointType\\": \\"http-raw\\",\\r\\n  \\"clientId\\": \\"giftcard-demo-1\\",\\r\\n  \\"componentName\\": \\"Giftcard\\"\\r\\n}',
-    );
 
-    // return await this.axonClient
-    //   .registerEventHandler(
-    //     '9954567e-1742-4446-b649-8f949ebf5520',
-    //     [
-    //       'GiftCardIssuedEvent',
-    //       'GiftCardRedeemedEvent',
-    //       'GiftCardCancelledEvent',
-    //     ],
-    //     'giftcard-demo-1',
-    //     'Giftcard',
-    //     '/events',
-    //   )
-    //   .then((response) => {
-    //     this.logger.log(
-    //       `registered event handlers with response ${JSON.stringify(response)}`,
-    //     );
-    //   });
+    await this.axonClient
+      .registerEventHandler(
+        '9954567e-1742-4446-b649-8f949ebf5520',
+        [
+          'GiftCardIssuedEvent',
+          'GiftCardRedeemedEvent',
+          'GiftCardCancelledEvent',
+        ],
+        'giftcard-demo-1',
+        'Giftcard',
+        '/events',
+      )
+      .then((response) => {
+        this.logger.log(
+          `registered event handlers with response ${JSON.stringify(response)}`,
+        );
+      });
   }
 
   /**

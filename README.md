@@ -51,6 +51,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+
 ## Running the app in Docker (development mode)
 
 > Please set the correct license in [axoniq.license](axoniq.license).

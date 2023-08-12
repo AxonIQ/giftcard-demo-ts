@@ -18,5 +18,5 @@ GET http://localhost:3000/gift-card
 Content-Type: application/json
 
 ###
-GET http://localhost:3000/gift-card/10fca0c4-3376-4ca2-a7c2-db2b75c250el
+GET http://localhost:3000/gift-card/10fca0c4-3376-4ca2-a7c2-db2b75c250e7
 Content-Type: application/json

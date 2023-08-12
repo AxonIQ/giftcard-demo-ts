@@ -41,10 +41,7 @@ AxonIQ-RoutingKey: 10fca0c4-3376-4ca2-a7c2-db2b75c250ff
 
 ### Register Event Handler(s)
 
-# PUT does not work if the subscription does not exit, use POST instead :(
-# https://github.com/AxonIQ/axon-synapse/issues/109
-# PUT http://localhost:8080/v1/contexts/default/handlers/events/7ec558ec-90c4-4d51-b444-a028830257ba
-POST http://localhost:8080/v1/contexts/default/handlers/events
+PUT http://localhost:8080/v1/contexts/default/handlers/events/08a08dc4-0057-45e8-9291-9a47ffb09e52
 Content-Type: application/json
 
 {

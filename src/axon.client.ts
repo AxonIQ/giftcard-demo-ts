@@ -235,7 +235,7 @@ export class AxonClient<C, E, Q> {
       clientId: clientId,
       componentName: componentName,
     };
-    const URL = `${axonApiUrl}/contexts/${context}/handlers/${handlerId}`;
+    const URL = `${axonApiUrl}/contexts/${context}/handlers/events/${handlerId}`;
     const { data } = await firstValueFrom(
       this.httpService
         .put<HandlerRegistrationResponse>(URL, request, {
