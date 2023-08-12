@@ -78,10 +78,11 @@ $ npm run test:e2e
 $ npm run test:cov
 ```
 
-Additionally, check the HTTP `scratch files` that you can run and explore the application:
+## Play
+
+Check the HTTP `scratch file(s)` that you can run and explore the application:
 
  - [test.http](test.http)
- - [synapse.http](synapse.http)
 
 
 ## Infrastructure
