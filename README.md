@@ -56,7 +56,7 @@ $ npm run start:prod
 
 Set the correct :
  - license in [axoniq.license](axoniq.license).
- - download latest version of Synapse JAR and copy it to [synapse](synapse) folder. Check the [synapse/Dockerfile](synapse/Dockerfile) for the exact name of the JAR file.
+ - [download latest version](https://download.axoniq.io/axonserver/axon-synapse.zip) of Synapse JAR and copy it to [synapse](synapse) folder. Check the [synapse/Dockerfile](synapse/Dockerfile) for the exact name of the JAR file.
 
 ```bash
 docker-compose up -d
