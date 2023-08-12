@@ -65,7 +65,7 @@ export class GiftCardEventRepository
     return Promise.all(result);
   }
 
-  latestVersionProvider(e: GiftCardEvent): number | null {
+  async latestVersionProvider(e: GiftCardEvent): Promise<number | null> {
     throw new Error('Method not implemented.');
   }
 
