@@ -27,7 +27,7 @@ In this demo we have categorized the code into three layers:
    - [gift-card.command-gateway.ts](src/gift-card/command/gift-card.command-gateway.ts) (`command side`) - HTTP command publisher
    - [gift-card.event-repository.ts](src/gift-card/command/gift-card.event-repository.ts) (`command side`) - Axon Server event repository
    - [gift-card.event-handler.materialized-view.controller.ts](src/gift-card/query/gift-card.event-handler.materialized-view.controller.ts) (`query side`) - HTTP event subscriber/callback
-   - [gift-card.view-state-repository.ts](src/gift-card/query/gift-card.view-state-repository.ts) (`query side`) - In-Memory view state repository
+   - [gift-card.view-state-repository.ts](src/gift-card/query/gift-card.view-state-repository.ts) (`query side`) - Postgres DB view state repository
    - [gift-card.controller.ts](src/gift-card/web/gift-card.controller.ts) (`command side + query side`) - HTTP/REST API, facing users
 
 Additionally, the components are split per command and query side of the application. This is CQRS pattern influencing the structure of the application.
@@ -104,9 +104,6 @@ Run Axon Server, Axon Synapse and Postgres
  - docker
    - `docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres`
 
-### Fmodel-ts
- - [github](https://github.com/fraktalio/fmodel-ts)
- - [npm](https://www.npmjs.com/package/@fraktalio/fmodel-ts)
 
 
 ---

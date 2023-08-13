@@ -9,13 +9,13 @@ export interface GiftCardIssuedEvent {
   amount: number;
 }
 
-export class GiftCardRedeemedEvent {
+export interface GiftCardRedeemedEvent {
   kind: 'GiftCardRedeemedEvent';
   id: string;
   amount: number;
 }
 
-export class GiftCardCancelledEvent {
+export interface GiftCardCancelledEvent {
   kind: 'GiftCardCancelledEvent';
   id: string;
 }

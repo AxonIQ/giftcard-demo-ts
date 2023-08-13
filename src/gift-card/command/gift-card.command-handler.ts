@@ -39,13 +39,15 @@ export const giftCardCommandHandler: IDecider<
     switch (c.kind) {
       case 'IssueGiftCardCommand':
         logger.log(`issued gift card ${c.id} successfully`);
-        return [
-          {
-            kind: 'GiftCardIssuedEvent',
-            id: c.id,
-            amount: c.amount,
-          },
-        ];
+        return s == null
+          ? [
+              {
+                kind: 'GiftCardIssuedEvent',
+                id: c.id,
+                amount: c.amount,
+              },
+            ]
+          : []; // in case of a duplicate Issue command, we just ignore it. Alternatively, we could throw an exception here or error event
       case 'RedeemGiftCardCommand':
         logger.log(`redeemed gift card ${c.id} successfully`);
         return s !== null && s.remainingAmount >= c.amount && s.isActive
@@ -56,7 +58,7 @@ export const giftCardCommandHandler: IDecider<
                 amount: c.amount,
               },
             ]
-          : [];
+          : []; // in case of a Redeem command for the nonexistent GiftCard state (or in incorrect status), we just ignore it. Alternatively, we could throw an exception here or error event
       case 'CancelGiftCardCommand':
         logger.log(`canceled gift card ${c.id} successfully`);
         return s !== null
@@ -66,7 +68,7 @@ export const giftCardCommandHandler: IDecider<
                 id: c.id,
               },
             ]
-          : [];
+          : []; // in case of a Cancel command for the nonexistent GiftCard state, we just ignore it. Alternatively, we could throw an exception here or error event
       default:
         // Exhaustive matching of the command type
         const _: never = c;
