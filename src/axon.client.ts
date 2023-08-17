@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
-import { catchError, firstValueFrom } from 'rxjs';
+import { catchError, firstValueFrom, retry, tap } from 'rxjs';
 import { AxiosError } from 'axios';
 import { ConfigService } from '@nestjs/config';
 
@@ -242,6 +242,15 @@ export class AxonClient<C, E, Q> {
           headers: headersRequest,
         })
         .pipe(
+          tap({
+            error: (err) =>
+              this.logger.error(
+                `Unable to register Event Handler (${err.message}). Retrying ...`,
+              ),
+          }),
+          retry({ count: 10, delay: 6000, resetOnSuccess: true }),
+        )
+        .pipe(
           catchError((error: AxiosError) => {
             this.logger.error(error.message, error.stack);
             throw error;
@@ -294,6 +303,15 @@ export class AxonClient<C, E, Q> {
           headers: headersRequest,
         })
         .pipe(
+          tap({
+            error: (err) =>
+              this.logger.error(
+                `Unable to register Command Handler (${err.message}). Retrying ...`,
+              ),
+          }),
+          retry({ count: 10, delay: 6000, resetOnSuccess: true }),
+        )
+        .pipe(
           catchError((error: AxiosError) => {
             this.logger.error(error.message, error.stack);
             throw error;
@@ -345,6 +363,15 @@ export class AxonClient<C, E, Q> {
         .put<HandlerRegistrationResponse>(URL, request, {
           headers: headersRequest,
         })
+        .pipe(
+          tap({
+            error: (err) =>
+              this.logger.error(
+                `Unable to register Query Handler (${err.message}). Retrying ...`,
+              ),
+          }),
+          retry({ count: 10, delay: 6000, resetOnSuccess: true }),
+        )
         .pipe(
           catchError((error: AxiosError) => {
             this.logger.error(error.message, error.stack);

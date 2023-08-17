@@ -23,6 +23,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         autoLoadEntities: configService.get<boolean>(
           'DATABASE_AUTOLOADENTITIES',
         ),
+        retryAttempts: 20,
         synchronize: configService.get<boolean>('DATABASE_SYNCHRONIZE'),
       }),
     }),

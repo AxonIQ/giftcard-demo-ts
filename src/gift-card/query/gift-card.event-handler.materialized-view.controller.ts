@@ -39,20 +39,6 @@ export class GiftCardEventHandlerController implements OnModuleInit {
    */
   async onModuleInit(): Promise<void> {
     await this.axonClient
-      .registerQueryHandler(
-        '08a08dc4-0057-45e8-9291-9a47ffb09e52',
-        ['FindByIdQuery', 'FindAllQuery'],
-        'giftcard-demo-1',
-        'Giftcard',
-        '/queries',
-      )
-      .then((response) => {
-        this.logger.log(
-          `registered query handlers with response ${JSON.stringify(response)}`,
-        );
-      });
-
-    await this.axonClient
       .registerEventHandler(
         '9954567e-1742-4446-b649-8f949ebf5520',
         [
@@ -67,6 +53,20 @@ export class GiftCardEventHandlerController implements OnModuleInit {
       .then((response) => {
         this.logger.log(
           `registered event handlers with response ${JSON.stringify(response)}`,
+        );
+      });
+
+    await this.axonClient
+      .registerQueryHandler(
+        '08a08dc4-0057-45e8-9291-9a47ffb09e52',
+        ['FindByIdQuery', 'FindAllQuery'],
+        'giftcard-demo-1',
+        'Giftcard',
+        '/queries',
+      )
+      .then((response) => {
+        this.logger.log(
+          `registered query handlers with response ${JSON.stringify(response)}`,
         );
       });
   }
