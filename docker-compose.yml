@@ -17,8 +17,6 @@ services:
       - postgres
       - axoniq-synapse
       - axonserver-enterprise-1
-      - axonserver-enterprise-2
-      - axonserver-enterprise-3
     volumes:
       - ./src:/app/src
     networks:
@@ -31,7 +29,7 @@ services:
       context: ./synapse
       dockerfile: Dockerfile
     environment:
-      - synapse.serverList=axonserver-enterprise-1:8124,axonserver-enterprise-2:8125,axonserver-enterprise-3:8126
+      - synapse.serverList=axonserver-enterprise-1:8124
     ports:
       - '8080:8080'
     networks:
@@ -41,8 +39,6 @@ services:
     image: axoniq/axonserver-enterprise:2023.0.1-jdk-17-dev
     hostname: axonserver-enterprise-1
     environment:
-      - AXONIQ_AXONSERVER_CLUSTERTEMPLATE_PATH=/axonserver/cluster-template.yml
-      - AXONIQ_AXONSERVER_ENTERPRISE_LICENSE-DIRECTORY=/axonserver
       - SERVER_PORT=8024
       - AXONIQ_AXONSERVER_PORT=8124
       - AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED=true
@@ -57,54 +53,6 @@ services:
       - '8024:8024'
       - '8124:8124'
       - '8224:8224'
-    networks:
-      - axon-net
-
-  axonserver-enterprise-2:
-    platform: linux/arm64
-    image: axoniq/axonserver-enterprise:2023.0.1-jdk-17-dev
-    hostname: axonserver-enterprise-2
-    environment:
-      - AXONIQ_AXONSERVER_CLUSTERTEMPLATE_PATH=/axonserver/cluster-template.yml
-      - AXONIQ_AXONSERVER_ENTERPRISE_LICENSE-DIRECTORY=/axonserver
-      - SERVER_PORT=8025
-      - AXONIQ_AXONSERVER_PORT=8125
-      - AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED=true
-      - AXONIQ_AXONSERVER_METRICS_GRPC_PROMETHEUS-ENABLED=true
-    volumes:
-      - axonserver-enterprise-2-log:/axonserver/log
-      - axonserver-enterprise-2-events:/axonserver/events
-      - axonserver-enterprise-2-data:/axonserver/data
-      - ./axoniq.license:/axonserver/axoniq.license
-      - ./cluster-template.yml:/axonserver/cluster-template.yml
-    ports:
-      - '8025:8025'
-      - '8125:8125'
-      - '8225:8225'
-    networks:
-      - axon-net
-
-  axonserver-enterprise-3:
-    platform: linux/arm64
-    image: axoniq/axonserver-enterprise:2023.0.1-jdk-17-dev
-    hostname: axonserver-enterprise-3
-    environment:
-      - AXONIQ_AXONSERVER_CLUSTERTEMPLATE_PATH=/axonserver/cluster-template.yml
-      - AXONIQ_AXONSERVER_ENTERPRISE_LICENSE-DIRECTORY=/axonserver
-      - SERVER_PORT=8026
-      - AXONIQ_AXONSERVER_PORT=8126
-      - AXONIQ_AXONSERVER_METRICS_GRPC_ENABLED=true
-      - AXONIQ_AXONSERVER_METRICS_GRPC_PROMETHEUS-ENABLED=true
-    volumes:
-      - axonserver-enterprise-3-log:/axonserver/log
-      - axonserver-enterprise-3-events:/axonserver/events
-      - axonserver-enterprise-3-data:/axonserver/data
-      - ./axoniq.license:/axonserver/axoniq.license
-      - ./cluster-template.yml:/axonserver/cluster-template.yml
-    ports:
-      - '8026:8026'
-      - '8126:8126'
-      - '8226:8226'
     networks:
       - axon-net
   postgres:
@@ -126,12 +74,6 @@ volumes:
   axonserver-enterprise-1-log:
   axonserver-enterprise-1-events:
   axonserver-enterprise-1-data:
-  axonserver-enterprise-2-log:
-  axonserver-enterprise-2-events:
-  axonserver-enterprise-2-data:
-  axonserver-enterprise-3-log:
-  axonserver-enterprise-3-events:
-  axonserver-enterprise-3-data:
   postgres-data:
 
 networks:
