@@ -36,7 +36,7 @@ services:
       - axon-net
   axonserver-enterprise-1:
     platform: linux/arm64
-    image: axoniq/axonserver-enterprise:2023.0.1-jdk-17-dev
+    image: axoniq/axonserver:latest-jdk-17-dev
     hostname: axonserver-enterprise-1
     environment:
       - SERVER_PORT=8024
